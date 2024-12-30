@@ -17,11 +17,16 @@ export default defineNuxtPlugin(async nuxtApp => {
 
   try {
     const authenticated = await keycloak.init({ onLoad: 'login-required' })
-    if (authenticated)
-      console.log('User is authenticated')
-
-    else
-      console.log('User is not authenticated')
+    if (authenticated) {
+      console.debug('User is authenticated')
+      if (!keycloak.realmAccess?.roles.includes('MHS')) {
+        console.debug('Access denied')
+        await keycloak.logout()
+      }
+    }
+    else {
+      console.debug('User is not authenticated')
+    }
   }
   catch (error) {
     console.error('Failed to initialize adapter:', error)
@@ -33,7 +38,7 @@ export default defineNuxtPlugin(async nuxtApp => {
 
     keycloakStore.setNim(profile.username)
     keycloakStore.setNama(profile.firstName, profile.lastName)
-    console.log('Retrieved user profile:', profile)
+    console.debug('Retrieved user profile:', profile)
   }
   catch (error) {
     console.error('Failed to load user profile:', error)
