@@ -6,14 +6,15 @@ export default defineEventHandler(async event => {
 
   try {
     const resp = await $fetch<InvoiceList>(`${runtimeConfig.public.siserkomApiUrl}/mahasiswa/${nim}/invoice`)
-
-    for (const item of resp._embedded.invoiceModelList) {
-      if (item.idKelas) {
-        try {
-          item.kelas = await $fetch(`${runtimeConfig.public.siserkomApiUrl}/kelas/${item.idKelas}`)
-        }
-        catch (errorKelas) {
-          console.error(errorKelas)
+    if (resp._embedded) {
+      for (const item of resp?._embedded?.invoiceModelList) {
+        if (item?.idKelas) {
+          try {
+            item.kelas = await $fetch(`${runtimeConfig.public.siserkomApiUrl}/kelas/${item.idKelas}`)
+          }
+          catch (errorKelas) {
+            console.error(errorKelas)
+          }
         }
       }
     }
