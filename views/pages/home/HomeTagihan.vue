@@ -65,6 +65,15 @@ watchEffect(() => {
               <p class="text-base font-weight-medium">
                 <span class="me-3">{{ invoice.idJenis === 1 ? 'Pengajar' : 'Penguji' }}: {{ invoice.kelas.namaPengajar }}</span>
               </p>
+              <p class="text-base font-weight-medium">
+                <span class="me-3">Nilai Ujian Angka: {{ invoice.nilaiUjianAngka }}</span>
+              </p>
+              <p class="text-base font-weight-medium">
+                <span class="me-3">Nilai Ujian Huruf: {{ invoice.nilaiUjianHuruf }}</span>
+              </p>
+              <p class="text-base font-weight-medium">
+                <span class="me-3">Lulus: {{ invoice.isLulusUjian ? 'Ya' : 'Tidak' }}</span>
+              </p>
             </div>
             <TagihanPilihKelasDialog
               v-else-if="invoice.isSudahBayar && [1, 2].includes(invoice.idJenis)"
