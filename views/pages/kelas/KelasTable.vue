@@ -34,7 +34,7 @@ const { data } = await useFetch<Kelas[]>('/api/kelas/available')
 
     <tbody>
       <tr
-        v-for="item in data"
+        v-for="item in data.kelasAvailable"
         :key="item.id"
       >
         <td>

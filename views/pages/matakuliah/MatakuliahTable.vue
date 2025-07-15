@@ -34,7 +34,6 @@ const url = computed(() => {
 const { data } = await useFetch<MatakuliahList>(url)
 
 watchEffect(() => {
-  console.log(page.value)
   matkulList.value = data?.value?._embedded?.mataKuliahModelList
 })
 </script>

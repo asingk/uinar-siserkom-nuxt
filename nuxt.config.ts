@@ -123,7 +123,6 @@ export default defineNuxtConfig({
   modules: ['@vueuse/nuxt', '@nuxtjs/device', '@pinia/nuxt'],
   compatibilityDate: '2024-12-13',
   runtimeConfig: {
-    siserkomApiKey: process.env.SISERKOM_API_KEY,
     public: {
       keycloakUrl: process.env.KEYCLOAK_URL,
       keycloakRealm: process.env.KEYCLOAK_REALM,

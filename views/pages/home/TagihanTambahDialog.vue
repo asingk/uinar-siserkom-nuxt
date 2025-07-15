@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type Keycloak from 'keycloak-js'
 import { useKeycloakStore } from '@/stores/keycloak'
 
 interface JenisInvoice {
@@ -12,6 +13,9 @@ const jenisInvoiceItem = ref()
 const jenisId = ref<number>()
 const errorMessage = ref('')
 
+const nuxtApp = useNuxtApp()
+const keycloak = nuxtApp.$keycloak as Keycloak
+
 const nim = ref('')
 const keycloakStore = useKeycloakStore()
 
@@ -24,7 +28,7 @@ watch(dialog, async newX => {
 
     const { data } = await useFetch<JenisInvoice[]>('api/jenis-invoice')
 
-    jenisInvoiceItem.value = data.value
+    jenisInvoiceItem.value = data.value.jenisInvoice
   }
 })
 
@@ -32,6 +36,9 @@ async function submit() {
   try {
     await $fetch(`/api/mahasiswa/${nim.value}/invoice`, {
       method: 'POST',
+      headers: {
+        token: `${keycloak.token}`,
+      },
       body: {
         jenisInvoice: jenisId.value,
       },

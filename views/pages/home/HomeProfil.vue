@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import type Keycloak from 'keycloak-js'
 import { useKeycloakStore } from '@/stores/keycloak'
 
 interface Mahasiswa {
@@ -12,6 +13,9 @@ const runtimeConfig = useRuntimeConfig()
 
 const nim = ref('')
 const keycloakStore = useKeycloakStore()
+
+const nuxtApp = useNuxtApp()
+const keycloak = nuxtApp.$keycloak as Keycloak
 
 nim.value = keycloakStore.nim
 
@@ -27,6 +31,9 @@ async function submit() {
   try {
     await $fetch(`/api/mahasiswa/${nim.value}/sertifikat`, {
       method: 'POST',
+      headers: {
+        token: `${keycloak.token}`,
+      },
     })
   }
   catch (error: any) {

@@ -38,16 +38,39 @@ export default defineNuxtPlugin(async nuxtApp => {
 
     keycloakStore.setNim(profile.username)
     keycloakStore.setNama(profile.firstName, profile.lastName)
-    console.debug('Retrieved user profile:', profile)
+
+    // console.debug('Retrieved user profile:', profile)
   }
   catch (error) {
     console.error('Failed to load user profile:', error)
   }
 
-  try {
-    await keycloak.updateToken(200)
-  }
-  catch (error) {
-    console.error('Failed to refresh token:', error)
-  }
+  // try {
+  //   await keycloak.updateToken(200)
+  // }
+  // catch (error) {
+  //   console.error('Failed to refresh token:', error)
+  // }
+
+  setInterval(() => {
+    keycloak
+      .updateToken(70)
+      .then(refreshed => {
+        if (refreshed) {
+          console.debug(`Token refreshed ${refreshed}`)
+        }
+        else {
+          console.debug(
+            `Token not refreshed, valid for ${
+              Math.round(
+                keycloak.tokenParsed.exp + keycloak.timeSkew - new Date().getTime() / 1000,
+              )
+            } seconds`,
+          )
+        }
+      })
+      .catch(() => {
+        console.error('Failed to refresh token')
+      })
+  }, 60000)
 })

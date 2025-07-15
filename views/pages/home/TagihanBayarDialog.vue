@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type Keycloak from 'keycloak-js'
+
 const props = defineProps({
   id: String,
 })
@@ -6,6 +8,9 @@ const props = defineProps({
 const emit = defineEmits(['submit'])
 const dialog = ref(false)
 const errorMessage = ref()
+
+const nuxtApp = useNuxtApp()
+const keycloak = nuxtApp.$keycloak as Keycloak
 
 watch(dialog, async newX => {
   if (newX)
@@ -16,6 +21,9 @@ async function submit() {
   try {
     await $fetch(`/api/invoice/${props.id}/bayar`, {
       method: 'POST',
+      headers: {
+        token: `${keycloak.token}`,
+      },
     })
     dialog.value = false
     emit('submit')

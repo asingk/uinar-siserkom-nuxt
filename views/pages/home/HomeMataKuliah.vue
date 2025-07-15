@@ -1,27 +1,32 @@
 <script lang="ts" setup>
+import type Keycloak from 'keycloak-js'
 import { useKeycloakStore } from '@/stores/keycloak'
 
 const nim = ref('')
 const keycloakStore = useKeycloakStore()
 
+const nuxtApp = useNuxtApp()
+const keycloak = nuxtApp.$keycloak as Keycloak
+
 nim.value = keycloakStore.nim
 
 const matkul = ref()
 
-const { data, refresh } = await useFetch(`/api/mahasiswa/${nim.value}/matakuliah`)
+const { data } = await useFetch(`/api/mahasiswa/${nim.value}/matakuliah`)
 
-matkul.value = data.value
+matkul.value = data.value.matakuliahMahasiswa
 
 const loadings = ref<boolean>(false)
 
 async function cekUlang() {
   loadings.value = true
 
-  await $fetch(`/api/mahasiswa/${nim.value}/matakuliah`, {
+  matkul.value = await $fetch(`/api/mahasiswa/${nim.value}/matakuliah`, {
     method: 'POST',
+    headers: {
+      token: `${keycloak.token}`,
+    },
   })
-
-  await refresh()
   loadings.value = false
 }
 </script>
