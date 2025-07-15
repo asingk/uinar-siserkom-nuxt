@@ -1,13 +1,14 @@
 export default defineEventHandler(async event => {
   const runtimeConfig = useRuntimeConfig()
   const nim = getRouterParam(event, 'id')
+  const headers = getRequestHeaders(event)
+  const authHeader = headers['token']
 
   try {
     return await $fetch(`${runtimeConfig.public.siserkomApiUrl}/mahasiswa/${nim}/matakuliah`, {
       method: 'POST',
       headers: {
-        'apikey': runtimeConfig.siserkomApiKey,
-        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Bearer ${authHeader}`,
       },
     })
   }
